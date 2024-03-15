@@ -1,19 +1,42 @@
 package com.example.calcv2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.room.Room
 import com.example.calcv2.databinding.ActivityMainBinding
+import com.example.calcv2.history.AppDatabase
+import com.example.calcv2.history.CalcHistory
+import com.example.calcv2.history.HistoryActivity
 import net.objecthunter.exp4j.ExpressionBuilder
+import kotlin.concurrent.thread
+
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    private lateinit var db: AppDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Создание экземпляра класса привязки и назначение переменной binding
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        // Инициализация базы данных из объекта MyApplication
+        val myApplication = application as MyApplication
+        db = myApplication.database
+
+        // удаление данных из бд
+//        thread {
+//            db.calcHistoryDao().deleteAll()
+//            runOnUiThread {
+//                binding.historyView.text = ""
+//            }
+//        }
+        loadAndDisplayHistory()
+
 
         // Установка содержимого активности с использованием корневого представления из класса привязки
         setContentView(binding.root)
@@ -121,19 +144,49 @@ class MainActivity : AppCompatActivity() {
                     try {
                         val expr = ExpressionBuilder(operation.text.toString()).build() //строим выражение
                         val res = expr.evaluate() //Находим ответ (число, может быть нецелое)
+                        var resultFinish = ""
                         val longres = res.toLong() //longres - число в формате long (целочисленное)
                         if (longres.toDouble() == res) { //Если число целое,
-                            result.text = longres.toString() //То: Отбрасываем ноль после запятой
+                            resultFinish = "= " + longres.toString() //То: Отбрасываем ноль после запятой
+
                         } else {
-                            result.text = res.toString() //Иначе: Сохраняем числа после запятой
+                            resultFinish = "= " + res.toString() //Иначе: Сохраняем числа после запятой
                         }
+                        result.text = resultFinish
+                        Log.d("MyLog", "Expression - ${operation.text} result - $resultFinish")
+                        thread {
+                            db.calcHistoryDao().insert(CalcHistory(expression = operation.text.toString(), result = resultFinish))
+                        }
+
                     } catch (e: Exception) { //Если выражение записано некорректно
                         result.text = "Error" //В поле ответа пишем 'Error'
                     }
                 }
+                loadAndDisplayHistory()
+            }
+
+            historyImView.setOnClickListener {
+                val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+                startActivity(intent)
+            }
+
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loadAndDisplayHistory()
+    }
+
+    fun loadAndDisplayHistory() {
+        thread {
+            var history = db.calcHistoryDao().getAllHistory()
+            history = history.takeLast(3)
+            val historyText = history.joinToString("\n") { "${it.expression} ${it.result}" }
+            runOnUiThread {
+                // Отобразить историю операций в текстовом поле
+                binding.historyView.text = historyText
             }
         }
-
-
     }
 }

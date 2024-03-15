@@ -3,6 +3,7 @@
     <style name="Base.Theme.CalcV2" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
     <style name="Theme.CalcV2" parent="Base.Theme.CalcV2" />
@@ -12,9 +13,9 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">#171616</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#fc4f05</item>
+        <item name="android:background">#ee9327</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0.5dp</item>
     </style>
@@ -24,9 +25,9 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">#171616</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#999594</item>
+        <item name="android:background">#A29696</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">#2A2929</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0.5dp</item>
     </style>
@@ -36,12 +37,11 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">#403e3d</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:background">#615C5C</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0.5dp</item>
     </style>
 
-    <color name="color_equal">#f7550f</color>
 </resources>
