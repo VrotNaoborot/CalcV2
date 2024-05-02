@@ -6,7 +6,7 @@ import com.example.calcv2.history.AppDatabase
 
 class MyApplication: Application() {
     lateinit var database: AppDatabase
-        private set
+         private set
 
     override fun onCreate() {
         super.onCreate()
